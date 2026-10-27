@@ -1,4 +1,4 @@
-import NetworkExtension
+@preconcurrency import NetworkExtension
 import VlessCore   // фреймворк из scripts/build-core.sh (gomobile bind)
 
 /// Ключи счётчиков трафика в App Group (читает MainViewController).
@@ -56,7 +56,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 let sink = FlowPacketSink(onBytes: { count in
                     weakProvider?.addOutgoingBytes(count)
                 }, flow: strongSelf.packetFlow)
-                try VlesscoreTunStart(sink, "127.0.0.1:10808", 1400, 60)
+                try VlesscoreTunStart(sink, "127.0.0.1:10808", 1400, 60, nil)
                 strongSelf.tunStarted = true
             } catch {
                 completionHandler(error); return
@@ -91,9 +91,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         statsTimer?.cancel()
         statsTimer = nil
 
-        if tunStarted { try? VlesscoreTunStop(nil) }
+        if tunStarted { _ = try?  VlesscoreTunStop(nil) }
         tunStarted = false
-        if xrayStarted { try? VlesscoreXrayStop(nil) }
+        if xrayStarted { _ = try? VlesscoreXrayStop(nil) }
         xrayStarted = false
 
         writeStats()
@@ -135,7 +135,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     // MARK: - Отладка
 
     override func handleAppMessage(_ messageData: Data,
-                                   completionHandler: @escaping (Data?) -> Void) {
+                                   completionHandler: ((Data?) -> Void)?) {
         var info = "stopped"
         if tunStarted { info = "running" }
         else if xrayStarted { info = "xray only" }
@@ -206,7 +206,7 @@ final class FlowPacketSink: VlesscorePacketSink {
 
     /// Каждый исходящий IP-пакет из стека уходит в TUN.
     /// Вызывается из Go-горутин — сериализуем запись.
-    func writePacket(_ pkt: Data!) throws {
+    override func writePacket(_ pkt: Data?) throws {
         guard let data = pkt, !data.isEmpty else { return }
         onBytesHandler(Int64(data.count))
         writeQueue.async { [weak self] in
