@@ -28,6 +28,7 @@ targets:
         codeSign: true
       - framework: XrayFramework/VlessCore.xcframework
         embed: true
+      - sdk: libresolv.tbd
 
   VlessPacketTunnel:
     type: app-extension
@@ -47,3 +48,4 @@ targets:
     dependencies:
       - sdk: NetworkExtension.framework
       - framework: XrayFramework/VlessCore.xcframework
+      - sdk: libresolv.tbd
