@@ -139,7 +139,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         var info = "stopped"
         if tunStarted { info = "running" }
         else if xrayStarted { info = "xray only" }
-        completionHandler("state=\(info)".data(using: .utf8))
+        completionHandler?("state=\(info)".data(using: .utf8))
     }
 
     // MARK: - JSON-конфиг Xray под VLESS-профиль
