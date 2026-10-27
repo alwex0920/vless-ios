@@ -18,7 +18,7 @@ gomobile init
 
 echo "== 3/3 gomobile bind =="
 mkdir -p "$OUT_DIR"
-GO111MODULE=on go get -tool golang.org/x/mobile/cmd/gobind
+GO111MODULE=on go get -t golang.org/x/mobile/cmd/gobind
 GO111MODULE=on gomobile bind \
   -target=ios -iosversion "$IOS_MIN" \
   -ldflags="-s -w" \
