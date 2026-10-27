@@ -21,6 +21,8 @@ jobs:
 
       - name: Build core (Xray + tun2socks -> xcframework)
         run: bash ./scripts/build-core.sh
+        env:
+          GOTOOLCHAIN: auto
 
       - name: Generate Xcode project
         run: |
