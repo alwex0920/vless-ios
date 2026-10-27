@@ -1,6 +1,6 @@
 import Foundation
 
-struct VlessProfile: Codable {
+struct VlessProfile: Codable, Equatable {
     var name: String
     var uuid: String
     var address: String
