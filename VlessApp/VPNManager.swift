@@ -53,9 +53,29 @@ final class VPNManager {
                 }
                 manager.isEnabled = true
                 manager.saveToPreferences { saveError in
-                    manager.loadFromPreferences { _ in
+                    if let error = saveError as NSError? {
+                        NSLog(
+                            "[VLESS] saveToPreferences failed: domain=%@ code=%ld userInfo=%@",
+                            error.domain,
+                            error.code,
+                            error.userInfo
+                        )
+                    } else {
+                        NSLog("[VLESS] VPN profile saved successfully")
+                    }
+                
+                    manager.loadFromPreferences { loadError in
+                        if let error = loadError as NSError? {
+                            NSLog(
+                                "[VLESS] loadFromPreferences failed: domain=%@ code=%ld userInfo=%@",
+                                error.domain,
+                                error.code,
+                                error.userInfo
+                            )
+                        }
+                
                         self.manager = manager
-                        completion(saveError)
+                        completion(saveError ?? loadError)
                     }
                 }
             }
