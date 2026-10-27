@@ -12,7 +12,7 @@ GO111MODULE=on go mod tidy   # подтянет xray-core 1.8.24 и go-tun2socks
 
 echo "== 2/3 Устанавливаем gomobile =="
 GO111MODULE=on go install golang.org/x/mobile/cmd/gomobile@latest
-GO111MODULE=on go install golang.org/x/mobile/bind@latest
+# GO111MODULE=on go install golang.org/x/mobile/bind@latest
 export PATH="$PATH:$(go env GOPATH)/bin"
 gomobile init
 
