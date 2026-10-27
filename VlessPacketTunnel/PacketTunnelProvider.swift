@@ -18,8 +18,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     // MARK: - Старт туннеля
 
-    override func startTunnel(options: [String: Any]?,
-                              completionHandler: @escaping (Error?) -> Void) {
+    override func startTunnel(options: [String : NSObject]?, completionHandler: @escaping @Sendable (Error?) -> Void) {
         guard let profile = ServerStore.shared.selected else {
             completionHandler(NSError(domain: "Vless", code: 1,
                                       userInfo: [NSLocalizedDescriptionKey: "Профиль не выбран — добавьте сервер в приложении"]))
@@ -43,7 +42,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
             // 1. Ядро Xray: локальный SOCKS5 на 127.0.0.1:10808 с VLESS-outbound.
             do {
-                try VlesscoreXrayStart(PacketTunnelProvider.xrayConfig(for: profile))
+                try VlesscoreXrayStart(PacketTunnelProvider.xrayConfig(for: profile), nil)
                 strongSelf.xrayStarted = true
             } catch {
                 completionHandler(error); return
@@ -71,7 +70,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     /// Непрерывное чтение пакетов из TUN и подача их в стек.
     private func startPump() {
-        packetFlow.readPackets { [weak self] packets in
+        packetFlow.readPackets { [weak self] packets, protocols in
             guard let strongSelf = self else { return }
             if strongSelf.tunStarted && !packets.isEmpty {
                 var total = 0
@@ -92,9 +91,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         statsTimer?.cancel()
         statsTimer = nil
 
-        if tunStarted { try? VlesscoreTunStop() }
+        if tunStarted { try? VlesscoreTunStop(nil) }
         tunStarted = false
-        if xrayStarted { try? VlesscoreXrayStop() }
+        if xrayStarted { try? VlesscoreXrayStop(nil) }
         xrayStarted = false
 
         writeStats()
@@ -193,7 +192,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 }
 
 /// Мост «стек lwIP -> packetFlow». Реализует сгенерированный gomobile-протокол.
-final class FlowPacketSink: NSObject, VlesscorePacketSink {
+final class FlowPacketSink: VlesscorePacketSink {
 
     private let flow: NEPacketTunnelFlow
     private let writeQueue = DispatchQueue(label: "vless.sink")
