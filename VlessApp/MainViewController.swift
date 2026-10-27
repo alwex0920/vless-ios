@@ -210,15 +210,11 @@ class MainViewController: UIViewController {
             DispatchQueue.main.async {
                 self?.connectButton.isEnabled = true
                 if let error = error as NSError? {
-                    let details = """
-                    Description: \(error.localizedDescription)
-                
-                    Domain: \(error.domain)
-                    Code: \(error.code)
-                
-                    UserInfo:
-                    \(error.userInfo)
-                    """
+                    let details =
+                        "Description: \(error.localizedDescription)\n\n" +
+                        "Domain: \(error.domain)\n" +
+                        "Code: \(error.code)\n\n" +
+                        "UserInfo:\n\(error.userInfo)"
                 
                     self?.showAlert(title: "VPN Error Details", message: details)
                 }
@@ -340,15 +336,11 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
                 VPNManager.shared.reconnect { error in
                     DispatchQueue.main.async {
                         if let error = error as NSError? {
-                            let details = """
-                            Description: \(error.localizedDescription)
-                        
-                            Domain: \(error.domain)
-                            Code: \(error.code)
-                        
-                            UserInfo:
-                            \(error.userInfo)
-                            """
+                            let details =
+                                "Description: \(error.localizedDescription)\n\n" +
+                                "Domain: \(error.domain)\n" +
+                                "Code: \(error.code)\n\n" +
+                                "UserInfo:\n\(error.userInfo)"
                         
                             self?.showAlert(title: "VPN Error Details", message: details)
                         }
