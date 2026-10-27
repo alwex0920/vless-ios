@@ -24,6 +24,7 @@ targets:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
         CODE_SIGN_ENTITLEMENTS: VlessApp/VlessApp.entitlements
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
+        OTHER_LDFLAGS: "-ld64"
     dependencies:
       - target: VlessPacketTunnel
         embed: true
