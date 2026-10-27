@@ -56,7 +56,7 @@ final class ServerStore {
     @discardableResult
     func add(_ profile: VlessProfile) -> Bool {
         var list = servers
-        if list.contains(profile) { return false }
+        if list.contains(where: { $0 == profile }) { return false }
         list.append(profile)
         servers = list
         if selectedIndex < 0 { selectedIndex = list.count - 1 }
