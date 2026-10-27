@@ -20,6 +20,8 @@ targets:
       base:
         INFOPLIST_FILE: VlessApp/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.yourid.VlessApp
+        SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
         CODE_SIGN_ENTITLEMENTS: VlessApp/VlessApp.entitlements
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
     dependencies:
