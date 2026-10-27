@@ -47,6 +47,20 @@ jobs:
             SYMROOT="$PWD/build/sym" \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
 
+      - name: Inspect built app and extension
+        run: |
+          APP="build/sym/Release-iphoneos/VlessApp.app"
+          echo "=== App files ==="
+          find "$APP" -maxdepth 3 \
+            \( -name "embedded.mobileprovision" -o -name "*.entitlements" -o -name "*.xcent" \) \
+            -print
+          echo "=== Signing settings ==="
+          /usr/bin/codesign -dv "$APP" 2>&1 || true
+          /usr/bin/codesign -d --entitlements :- "$APP" 2>&1 || true
+          echo "=== Extension signing ==="
+          /usr/bin/codesign -dv "$APP/PlugIns/VlessPacketTunnel.appex" 2>&1 || true
+          /usr/bin/codesign -d --entitlements :- "$APP/PlugIns/VlessPacketTunnel.appex" 2>&1 || true
+
       - name: Pack unsigned IPA
         run: |
           mkdir -p build/Payload
