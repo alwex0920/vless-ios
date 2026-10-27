@@ -3,10 +3,11 @@
 set -euo pipefail
 
 IOS_MIN=12.0
-OUT_DIR="$(dirname "$0")/../XrayFramework"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+OUT_DIR="$ROOT/XrayFramework"
 
 echo "== 1/3 Подготавливаем модуль ядра =="
-cd "$(dirname "$0")/../core-go"
+cd "$ROOT/core-go"
 GO111MODULE=on go mod tidy
 
 # >>> ДОБАВЛЕНО: обновляем sing до версии с исправлением errNoSuchInterface
