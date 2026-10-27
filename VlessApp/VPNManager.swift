@@ -1,3 +1,35 @@
+import Foundation
+import NetworkExtension
+
+final class VPNManager {
+    static let shared = VPNManager()
+    static let extBundleID = "com.yourid.VlessApp.VlessPacketTunnel"
+
+    enum State: String {
+        case off = "disconnected"
+        case connecting = "connecting"
+        case connected = "connected"
+    }
+
+    private(set) var manager: NETunnelProviderManager?
+
+    var status: State {
+        switch manager?.connection.status ?? .invalid {
+        case .connected:
+            return .connected
+        case .connecting, .reasserting:
+            return .connecting
+        default:
+            return .off
+        }
+    }
+
+    var session: NETunnelProviderSession? {
+        manager?.connection as? NETunnelProviderSession
+    }
+
+    /// Adds a stage label while preserving the original error domain and code.
+    private func diagnosticError(_ error: Error, stage: String) -> NSError {
         let original = error as NSError
         var info = original.userInfo
         info[NSLocalizedDescriptionKey] = "\(stage): \(original.localizedDescription)"
